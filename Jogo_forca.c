@@ -12,6 +12,9 @@ void abertura(){
     printf("*************************\n");
     printf("*     Jogo de Forca     *\n");
     printf("*************************\n\n");
+    printf("#########################\n");
+    printf("#   LIGUE O CAPSLOCK!!  #\n");
+    printf("#########################\n\n");
 }
 
 void chuta(){
@@ -22,21 +25,32 @@ void chuta(){
     chutesdados++;
 }
 
-void desenhaforca(){
-
-    printf("\nVoce ja deu %d chutes\n\n", chutesdados);
-
-    for(int i=0; i<strlen(palavrasecreta); i++){
-
-        int achou = jachutou(palavrasecreta[i]);
-
-        if(achou){
-            printf("%c ", palavrasecreta[i]);
+int contaErros() {
+    int erros = 0;
+    for (int i = 0; i < chutesdados; i++) {
+        int existe = 0;
+        for (int j = 0; j < strlen(palavrasecreta); j++) {
+            if (chutes[i] == palavrasecreta[j]) {
+                existe = 1;
+                break;
+            }
         }
-        else{
+        if (!existe) erros++;
+    }
+    return erros;
+}
+
+void desenhaforca() {
+    int erros = contaErros();
+    desenhaBoneco(erros);
+    printf("Voce ja deu %d chutes (%d erros de 6)\n\n", chutesdados, erros);
+
+    for (int i = 0; i < strlen(palavrasecreta); i++) {
+        if (jachutou(palavrasecreta[i])) {
+            printf("%c ", palavrasecreta[i]);
+        } else {
             printf("_ ");
         }
-
     }
     printf("\n");
 }
@@ -100,24 +114,8 @@ int acertou() {
     return 1;
 }
 
-int enforcou(){
-
-    int erros = 0;
-
-    for(int i=0; i<chutesdados; i++){
-        int existe = 0;
-
-        for(int j=0; j<strlen(palavrasecreta); j++){
-            if(chutes[i] == palavrasecreta[j]){
-
-                existe = 1;
-                break;
-            }
-        }
-        if(!existe) erros++;
-    }
-
-    return erros >= 5;
+int enforcou() {
+    return contaErros() >= 6;
 }
 
 int jachutou(char letra){
@@ -132,16 +130,38 @@ int jachutou(char letra){
     return achou;
 }
 
-int main(){
+void desenhaBoneco(int erros) {
+    printf("\n  ______\n");
+    printf("  |    |\n");
+    printf("  |    %s\n",   erros >= 1 ? "O"   : " ");
+    printf("  |   %s%s%s\n",
+           erros >= 3 ? "/" : " ",
+           erros >= 2 ? "|" : " ",
+           erros >= 4 ? "\\" : " ");
+    printf("  |   %s %s\n",
+           erros >= 5 ? "/" : " ",
+           erros >= 6 ? "\\" : " ");
+    printf("  |\n");
+    printf("__|__\n\n");
+}
 
+int main() {
     escolhapalavra();
     abertura();
 
-    do{
+    do {
         desenhaforca();
         chuta();
+    } while (!acertou() && !enforcou());
 
-    }while(!acertou() && !enforcou());
+    desenhaforca();
+
+    if (acertou()) {
+        printf("\n** PARABENS! Voce acertou: %s **\n\n", palavrasecreta);
+    } else {
+        printf("\n** ENFORCADO! A palavra era: %s **\n\n", palavrasecreta);
+    }
 
     adicionapalavra();
+    return 0;
 }

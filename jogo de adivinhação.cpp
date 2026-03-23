@@ -30,6 +30,10 @@ int main() {
     int numerotentativas;
     int acertou = 0;
     int nivel;
+
+    printf("\n#########################################\n");
+    printf("#  Tente adivinhar o numero de 1 a 100  #\n");
+    printf("#########################################\n");
     printf("\nQual dificuldade voce quer jogar?\n");
     printf("(1)Facil  (2)Medio  (3)Dificil\n\n");
 
@@ -89,16 +93,6 @@ int main() {
             printf("Seu chute eh menor que o numero secreto\n");
         }
         tentativas++;
-
-        //ou pode-se fazer desta forma
-        //double pontosperdidos;
-
-        //if(chute>numerosecreto){
-            //pontosperdidos = (chute - numerosecreto) / 2.0;
-        //}
-        //else{
-            //pontosperdidos = (numerosecreto - chute) / 2.0;
-        //}
 
         double pontosperdidos = abs(chute - numerosecreto) / 2.0;
 
